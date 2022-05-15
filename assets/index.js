@@ -1,7 +1,4 @@
-// spreading all buttons to an array
-const buttons = [...document.querySelectorAll('button')];
- // checking for possibilty of winning
- const WINNING_INDEXES = [
+const WINNING_INDEXES = [
   [0, 1, 2],
   [3, 4, 5],
   [6, 7, 8],
@@ -14,32 +11,56 @@ const buttons = [...document.querySelectorAll('button')];
   [2, 4, 6],
 ]
 
-let currentPlayer = 'X'
+class TicTacToe{
 
-function handleBtnClick(event){
-  // passing a value to the currentTarget of each buttons clicked
-  event.currentTarget.textContent = currentPlayer
-  event.currentTarget.disabled = true
-  // apply tenary to change current player
-  currentPlayer = currentPlayer === 'X' ? 'O' : 'X'
-
-  // checking winning posibilites
-  for(const indexes of WINNING_INDEXES){
-    const first = buttons[indexes[0]].textContent
-    console.log(first)
-    /* checking the value of the indexes of each buttons eqauls 'x' or 'o'
-    * also checking if first has a value and returns true
-    */
-   if(first && indexes.every(index => buttons[index].textContent === first)){
-     return alert(`${first} Won!!`)
-   }
+  constructor(currentPlayerElement, buttons){
+    this.currentPlayerElement = currentPlayerElement
+    this.buttons = buttons
+    this.currentPlayer = 'X'
+    // looping through buttons to run function
+  this.buttons.forEach(button => {
+    button.addEventListener('click', this.handleBtnClick.bind(this))
+  })
   }
 
- 
+  // adding Methods
+  handleBtnClick(event){
+    // passing a value to the currentTarget of each buttons clicked
+    event.currentTarget.textContent = this.currentPlayer
+    event.currentTarget.disabled = true
+    // apply tenary to change current player
+    this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X'
+    this.currentPlayerElement.textContent = this.currentPlayer
   
+    // checking winning posibilites
+    for(const indexes of WINNING_INDEXES){
+      const first = this.buttons[indexes[0]].textContent
+  
+      /* checking if all value of the indexes eqauls the first of value of the index
+      * also checking if first has a value and returns true
+      */
+     if(first && indexes.every(index => this.buttons[index].textContent === first)){
+       this.buttons.forEach(button => button.disabled = true);
+       return alert(`${first} Won!!`);
+     }
+    }
+    // Checking if every button in the buttons array is not empty
+    if(this.buttons.every(button => button.textContent !== '')){
+      return alert('Its a Draw')
+    }
+    
+  } //End of handleBtnClick Method
+
+
 }
 
-// looping through buttons to run function
-buttons.forEach(button => {
-  button.addEventListener('click', handleBtnClick)
-})
+// spreading all buttons to an array
+const buttons = [...document.querySelectorAll('button')];
+let currentPlayerElement = document.querySelector('#currentPlayer')
+
+
+new TicTacToe(currentPlayerElement, buttons)
+
+
+
+
